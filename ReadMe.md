@@ -37,3 +37,8 @@
 
 - **Delete a Reply from a Comment**
   `DELETE /threads/{threadId}/comments/{commentId}/replies/{replyId}`
+
+  ## Thread Comment Like
+
+- **Add and Remove a Like to a Comment**
+  `PUT /threads/{threadId}/comments/{commentId}/likes`
