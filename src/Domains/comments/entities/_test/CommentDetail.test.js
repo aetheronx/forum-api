@@ -22,6 +22,7 @@ describe('CommentDetail entities', () => {
       content: 'Just a few comments',
       replies: {},
       date: 50000000,
+      likeCount: 0,
     };
 
     // Action & Assert
@@ -37,6 +38,20 @@ describe('CommentDetail entities', () => {
       content: 'Just a few comments',
       replies: [],
       date: new Date(),
+      likeCount: 0,
+    };
+
+    expect(() => new CommentDetail(payload)).not.toThrow();
+  });
+
+  it('should not throw error when likeCount is a valid object', () => {
+    const payload = {
+      id: 'comment-5000',
+      username: 'joko',
+      content: 'Just a few comments',
+      replies: [],
+      date: new Date(),
+      likeCount: 0,
     };
 
     expect(() => new CommentDetail(payload)).not.toThrow();
@@ -56,6 +71,7 @@ describe('CommentDetail entities', () => {
           date: '2024-12-25T12:59:18.608942',
         },
       ],
+      likeCount: 0,
       date: '2024-12-25T12:59:18.608942',
     };
 
@@ -87,6 +103,7 @@ describe('CommentDetail entities', () => {
       ],
       date: '2024-12-25T12:59:18.608942',
       is_delete: true,
+      likeCount: 0,
     };
 
     // Action
