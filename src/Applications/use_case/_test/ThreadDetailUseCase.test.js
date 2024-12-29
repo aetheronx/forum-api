@@ -5,6 +5,7 @@ const CommentRepository = require('../../../Domains/comments/CommentRepository')
 const ReplyRepository = require('../../../Domains/replies/ReplyRepository');
 const CommentDetail = require('../../../Domains/comments/entities/CommentDetail');
 const ReplyDetail = require('../../../Domains/replies/entities/ReplyDetail');
+const LikeRepository = require('../../../Domains/likes/LikeRepository');
 
 describe('ThreadDetailUseCase', () => {
   it('should orchestrating the thread detail action correctly', async () => {
@@ -64,18 +65,39 @@ describe('ThreadDetailUseCase', () => {
       },
     ];
 
+    const mockCommentsLikes = [
+      {
+        id: 'like-433',
+        comment: 'comment-5001',
+        owner: 'joko',
+      },
+      {
+        id: 'like-434',
+        comment: 'comment-5001',
+        owner: 'putu',
+      },
+      {
+        id: 'like-435',
+        comment: 'comment-5000',
+        owner: 'joko',
+      },
+    ];
+
     const mockThreadRepository = new ThreadRepository();
     const mockCommentRepository = new CommentRepository();
     const mockReplyRepository = new ReplyRepository();
+    const mockLikeRepository = new LikeRepository();
 
     mockThreadRepository.getThreadById = jest.fn(() => Promise.resolve(mockThreadDetail));
     mockCommentRepository.getCommentsByThreadId = jest.fn(() => Promise.resolve(mockComments));
     mockReplyRepository.getRepliesByThreadId = jest.fn(() => Promise.resolve(mockReplies));
+    mockLikeRepository.getLikesByThreadId = jest.fn(() => Promise.resolve(mockCommentsLikes));
 
     const threadDetailUseCase = new ThreadDetailUseCase({
       threadRepository: mockThreadRepository,
       commentRepository: mockCommentRepository,
       replyRepository: mockReplyRepository,
+      likeRepository: mockLikeRepository,
     });
 
     // Action
@@ -96,6 +118,7 @@ describe('ThreadDetailUseCase', () => {
             date: '2024-12-25T12:59:18.608942',
             content: 'Just a few comments',
             is_delete: false,
+            likeCount: 1,
             replies: [
               new ReplyDetail({
                 id: 'reply-81',
@@ -120,6 +143,7 @@ describe('ThreadDetailUseCase', () => {
             content: '**komentar telah dihapus**',
             is_delete: true,
             replies: [],
+            likeCount: 2,
           }),
         ],
       })
@@ -128,5 +152,7 @@ describe('ThreadDetailUseCase', () => {
     expect(mockCommentRepository.getCommentsByThreadId).toBeCalledWith('thread-3000');
     expect(mockReplyRepository.getRepliesByThreadId).toBeCalledTimes(1);
     expect(mockReplyRepository.getRepliesByThreadId).toBeCalledWith('thread-3000');
+    expect(mockLikeRepository.getLikesByThreadId).toBeCalledTimes(1);
+    expect(mockLikeRepository.getLikesByThreadId).toBeCalledWith('thread-3000');
   });
 });
